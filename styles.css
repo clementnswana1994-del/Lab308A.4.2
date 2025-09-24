@@ -24,12 +24,12 @@ body {
   z-index: 99999;
   width: 30px;
   height: 30px;
-  color: lightpink;
+  color: rgb(241, 4, 4);
   cursor: pointer;
   transition: all ease 0.2s;
 }
 .favourite-button:hover {
-  color: red;
+  color: rgb(184, 164, 164);
   width: 36px;
   height: 36px;
   top: 7px;
