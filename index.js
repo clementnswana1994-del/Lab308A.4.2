@@ -1,5 +1,9 @@
-import { appendCarousel, clear, createCarouselItem, start } from "./Carousel.js";
-
+import {
+  appendCarousel,
+  clear,
+  createCarouselItem,
+  start,
+} from "./Carousel.js";
 
 // import axios from "axios";
 
@@ -13,7 +17,8 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "live_8b33Tbbh1l2zGjrqbNr4NmbIMV3g44L6KciAWae711XZJ3j5a7uuw0QIhm58fmpW";
+const API_KEY =
+  "live_8b33Tbbh1l2zGjrqbNr4NmbIMV3g44L6KciAWae711XZJ3j5a7uuw0QIhm58fmpW";
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -23,35 +28,22 @@ const API_KEY = "live_8b33Tbbh1l2zGjrqbNr4NmbIMV3g44L6KciAWae711XZJ3j5a7uuw0QIhm
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
-// async function initialLoad() {
-//   const response = await fetch('https://api.thecatapi.com/v1/breeds');
-// }
-//     console.log(initialLoad);
-//     const holdBreeds = await breedSelect.Json();
-//     if (let breed of breed) {
-//       const option = document.createElement("option")
-//       option.id=option.textContent=breed("option");
-//       option.id=option.textContent=breed("name")
 
-//       breedSelect.appendChild
-
-//     }
-      
 async function initialLoad() {
   try {
     // Retrieve a list of breeds from the cat API using fetch().
-    const response = await fetch('https://api.thecatapi.com/v1/breeds');
+    const response = await fetch("https://api.thecatapi.com/v1/breeds");
 
     // Check if the response was successful
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! status: ${response.status}`);
+    // }
     const catBreeds = await response.json();
 
     // Loop through the array of cat breeds
     for (const breed of catBreeds) {
       // Create new <options> for each of these breeds, and append them to breedSelect.
-      const option = document.createElement('option');
+      const option = document.createElement("option");
 
       // Each option should have a value attribute equal to the id of the breed.
       option.textContent = breed.name;
@@ -61,14 +53,12 @@ async function initialLoad() {
       breedSelect.appendChild(option);
     }
   } catch (error) {
-    console.error('An error occurred:', error);
+    console.error("An error occurred:", error);
   }
 }
 
 // Call the async function to start the process
 initialLoad();
-
-
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
@@ -84,93 +74,142 @@ initialLoad();
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
-
-async function handleBreedSelection() {
-    const breedSelect = document.getElementById('breedSelect');
-    const selectedBreedId = breedSelect.value;
-    const carousel = document.getElementById('carousel');
-    const infoDump = document.getElementById('infoDump');
-
-    // //  Clear previous content
-      carousel.innerHTML = '';
-      infoDump.innerHTML = '';
-
-    if (!selectedBreedId) {
-        return selectedBreedId; // No breed selected, do nothing
+async function GetBreedID(event) {
+  const breedInfo = await fetch(
+    "https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=" +
+      breedSelect.value,
+    {
+      headers: {
+        "x-api-key":
+          "live_v4LgSc6W6TRn00ApEOIBqcOGWh5KmjRKsIRWHKKJB9fypDHSCiawuUKniUHDKDls",
+      },
     }
+  );
 
-    try {
-        // Fetch breed images
-        const imageResponse = await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=beng${selectedBreedId}`); // Adjust limit as needed
-        const breedImages = await imageResponse.json();
-
-        // Fetch breed information (assuming a separate endpoint or included in image data)
-        // If breed info is not in image data, you might need another fetch call:
-        //  const infoResponse = await fetch(`https://api.thecatapi.com/v1/images/search?breed_ids=beng${selectedBreedId}`);
-        //  const breedInfo = await infoResponse.json();
-
-        // Populate carousel
-        breedImages.forEach((image, index) => {
-            const carouselItem = document.createElement('div');
-            carouselItem.classList.add('carousel-item');
-            if (index === 0) {
-                carouselItem.classList.add('active'); // Set first item as active
-            }
-            const img = document.createElement('img');
-            img.src = image.url;
-            img.alt = `Image of ${breedSelect.options[breedSelect.selectedIndex].text}`;
-            carouselItem.appendChild(img);
-            carousel.appendChild(carouselItem);
-        });
-
-        // Populate infoDump (using the first image object for breed info as an example)
-        if (breedImages.length > 0) {
-            const breedData = breedImages[0].breeds[0]; // Assuming breed info is nested in the image object
-            const infoContainer = document.createElement('div');
-            infoContainer.classList.add('breed-info');
-
-            const breedName = document.createElement('h2');
-            breedName.textContent = breedData.name;
-            infoContainer.appendChild(breedName);
-
-            const description = document.createElement('p');
-            description.textContent = breedData.description;
-            infoContainer.appendChild(description);
-
-            const temperament = document.createElement('p');
-            temperament.innerHTML = `<strong>Temperament:</strong> ${breedData.temperament}`;
-            infoContainer.appendChild(temperament);
-
-            const origin = document.createElement('p');
-            origin.innerHTML = `<strong>Origin:</strong> ${breedData.origin}`;
-            infoContainer.appendChild(origin);
-
-            infoDump.appendChild(infoContainer);
-        }
-
-        // Restart carousel (assuming a function exists to handle this)
-        // restartCarousel(); // Call your carousel initialization/restart function here
-
-    } catch (error) {
-        console.error('Error fetching breed data:', error);
-        infoDump.innerHTML = '<p>Error loading breed information. Please try again.</p>';
-    }
+  const holdInfo = await breedInfo.json();
+  console.log(holdInfo);
+  holdInfo.forEach(function (breed) {
+    let item = createCarouselItem(breed.url, "cat", breed.id);
+    appendCarousel(item);
+    console.log(item);
+  });
 }
 
-// Add event listener
-document.addEventListener('DOMContentLoaded', () => {
-    const breedSelect = document.getElementById('breedSelect');
-    if (breedSelect) {
-        breedSelect.addEventListener('change', handleBreedSelection);
-    }
-});
+breedSelect.addEventListener("change", GetBreedID);
 
-// Call this function at the end of your initialLoad function
-// Example:
-// function initialLoad() {
-//     // ... other initial loading logic ...
-     handleBreedSelection(); // To populate carousel on initial load with default selection
+// async funcation retrieveinfo() {
+//   const breedid = breedSelect.value;
+//   let response = await response.json();
+
 // }
+//   // if (selectedBreedName) {
+//    //   fetchinfoDump(breedSelect);
+//    // } else {
+//    //   // Clear previous info if the default option is selected
+//    //   breedInfoDump.innerHTML = '';
+//    // }
+//});
+
+// const imagesResponse = await fetch(`${baseUrl}/images/search?breed_ids=${breedId}&limit=5`, { // Request 5 images
+//       headers: {
+//         'x-api-key': apiKey
+//       }
+//     });
+
+//     if (!imagesResponse.ok) {
+//       throw new Error(`HTTP error! status: ${imagesResponse.status}`);
+//     }
+
+//     const breedImages = await imagesResponse.json();
+
+//     console.log(`Information and images for ${breedName}:`);
+//     console.log(breedImages); // This will be an array of image objects
+//     return breedImages;
+
+// async function handleBreedSelection() {
+//     const breedSelect = document.getElementById('breedSelect');
+//     const selectedBreedId = breedSelect.value;
+//     const carousel = document.getElementById('carousel');
+//     const infoDump = document.getElementById('infoDump');
+
+//     // //  Clear previous content
+//       carousel.innerHTML = '';
+//       infoDump.innerHTML = '<p>No information found for ${breedName}.</p>';
+
+//     if (!selectedBreedId) {
+//         return breedSelect.value; // No breed selected, do nothing
+//     }
+
+//     try {
+//         // Fetch breed images
+//         const imageResponse = await fetch(" https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=beng&api_key=REPLACE_ME"); // Adjust limit as needed
+//         const breedImages = await imageResponse.json();
+
+//         // Fetch breed information (assuming a separate endpoint or included in image data)
+//         // If breed info is not in image data, you might need another fetch call:
+//           const infoResponse = await fetch("<p>No information found for ${breedName}.</p>");
+//           const breedInfo = await infoResponse.json();
+
+//         // Populate carousel
+//         breedImages.forEach((image, index) => {
+//             const carouselItem = document.createElement('div');
+//             carouselItem.classList.add('carousel-item');
+//             if (index === 0) {
+//                 carouselItem.classList.add('active'); // Set first item as active
+//             }
+//             const img = document.createElement('img');
+//             img.src = image.url;
+//             img.alt = `Image of ${breedSelect.options[breedSelect.selectedIndex].text}`;
+//             carouselItem.appendChild(img);
+//             carousel.appendChild(carouselItem);
+//         });
+
+//         // Populate infoDump (using the first image object for breed info as an example)
+//         if (breedImages.length > 0) {
+//             const breedData = breedImages[0].breeds[0]; // Assuming breed info is nested in the image object
+//             const infoContainer = document.createElement('div');
+//             infoContainer.classList.add('breed-info');
+
+//             const breedName = document.createElement('h2');
+//             breedName.textContent = breedData.name;
+//             infoContainer.appendChild(breedName);
+
+//             const description = document.createElement('p');
+//             description.textContent = breedData.description;
+//             infoContainer.appendChild(description);
+
+//             const temperament = document.createElement('p');
+//             temperament.innerHTML = `<strong>Temperament:</strong> ${breedData.temperament}`;
+//             infoContainer.appendChild(temperament);
+
+//             const origin = document.createElement('p');
+//             origin.innerHTML = `<strong>Origin:</strong> ${breedData.origin}`;
+//             infoContainer.appendChild(origin);
+
+//             infoDump.appendChild(infoContainer);
+//         }
+
+//         // Restart carousel (assuming a function exists to handle this)
+//         // restartCarousel(); // Call your carousel initialization/restart function here
+
+//     } catch (error) {
+//         console.error('Error fetching breed data:', error);
+//         infoDump.innerHTML = '<p>Error loading breed information. Please try again.</p>';
+//     }
+// }
+
+// // Add event listener
+// document.addEventListener('DOMContentLoaded', () => {
+//     const breedSelect = document.getElementById('breedSelect');
+//         breedSelect.addEventListener('click', handleBreedSelection);
+// });
+
+// // Call this function at the end of your initialLoad function
+// // Example:
+// // function initialLoad() {
+// //     // ... other initial loading logic ...
+//      handleBreedSelection(); // To populate carousel on initial load with default selection
+// // }
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
