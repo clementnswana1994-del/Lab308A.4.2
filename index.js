@@ -97,119 +97,69 @@ async function GetBreedID(event) {
 
 breedSelect.addEventListener("change", GetBreedID);
 
-// async funcation retrieveinfo() {
-//   const breedid = breedSelect.value;
-//   let response = await response.json();
 
-// }
-//   // if (selectedBreedName) {
-//    //   fetchinfoDump(breedSelect);
-//    // } else {
-//    //   // Clear previous info if the default option is selected
-//    //   breedInfoDump.innerHTML = '';
-//    // }
-//});
+// Use the other data you have been given to create an informational section within the infoDump element.
+//   - Be creative with how you create DOM elements and HTML.
+             
+async function BreedInfo() {
+  const breedInfo = await fetch()
+  if (isLoading) {
+    return BreedInfo;
+  }
+  
 
-// const imagesResponse = await fetch(`${baseUrl}/images/search?breed_ids=${breedId}&limit=5`, { // Request 5 images
-//       headers: {
-//         'x-api-key': apiKey
-//       }
-//     });
+  if (!info) 
+    return 
+        let item = createinfoDump(breeds.url, 0, infoDump);
+  
+ 
+  const temperamentTags = info.temperament ? info.temperament.split(', ') : [];
 
-//     if (!imagesResponse.ok) {
-//       throw new Error(`HTTP error! status: ${imagesResponse.status}`);
-//     }
 
-//     const breedImages = await imagesResponse.json();
+} 
+ 
 
-//     console.log(`Information and images for ${breedName}:`);
-//     console.log(breedImages); // This will be an array of image objects
-//     return breedImages;
+//   // Create a main container for the informational section
+//   const infoSection = document.createElement('section');
+//   infoSection.classList.add('breeds.tempeture');
 
-// async function handleBreedSelection() {
-//     const breedSelect = document.getElementById('breedSelect');
-//     const selectedBreedId = breedSelect.value;
-//     const carousel = document.getElementById('carousel');
-//     const infoDump = document.getElementById('infoDump');
+//   // Create a dynamic heading
+//   const heading = document.createElement('h2');
+//   heading.textContent = 'breeds.tempeture';
+//   heading.style.color = '#0c62b7ff'; // Adding a touch of style
+//   infoSection.appendChild(breedSelect.tempeture);
 
-//     // //  Clear previous content
-//       carousel.innerHTML = '';
-//       infoDump.innerHTML = '<p>No information found for ${breedName}.</p>';
+//   const description = document.createElement('p');
+//   description.innerHTML = 'This section demonstrates the power of <strong>JavaScript DOM manipulation</strong> to construct and populate elements on the fly. Observe how new elements are nested and styled programmatically.';
+//   infoSection.appendChild(description);
 
-//     if (!selectedBreedId) {
-//         return breedSelect.value; // No breed selected, do nothing
-//     }
+//   // Create an unordered list to highlight key features
+//   const featureList = document.createElement('ul');
+//   featureList.style.listStyleType = 'square'; // Creative list style
+//   const features = [
+//     'Element creation with `document.createElement()`',
+//     'Attribute setting using `setAttribute()` or direct property access',
+//     'Text content assignment with `textContent` or `innerHTML`',
+//     'Hierarchical appending with `appendChild()`'
+//   ];
+//   features.forEach(featureText => {
+//     const listItem = document.createElement('li');
+//     listItem.textContent = featureText;
+//     featureList.appendChild(listItem);
+//   });
+//   infoSection.appendChild(featureList);
 
-//     try {
-//         // Fetch breed images
-//         const imageResponse = await fetch(" https://api.thecatapi.com/v1/images/search?limit=10&breed_ids=beng&api_key=REPLACE_ME"); // Adjust limit as needed
-//         const breedImages = await imageResponse.json();
+//   // Create a small, styled footer for the section
+//   const sectionFooter = document.createElement('footer');
+//   const footerText = document.createElement('small');
+//   footerText.textContent = 'Generated dynamically on ' + new Date().toLocaleDateString();
+//   sectionFooter.appendChild(footerText);
+//   infoSection.appendChild(sectionFooter);
 
-//         // Fetch breed information (assuming a separate endpoint or included in image data)
-//         // If breed info is not in image data, you might need another fetch call:
-//           const infoResponse = await fetch("<p>No information found for ${breedName}.</p>");
-//           const breedInfo = await infoResponse.json();
-
-//         // Populate carousel
-//         breedImages.forEach((image, index) => {
-//             const carouselItem = document.createElement('div');
-//             carouselItem.classList.add('carousel-item');
-//             if (index === 0) {
-//                 carouselItem.classList.add('active'); // Set first item as active
-//             }
-//             const img = document.createElement('img');
-//             img.src = image.url;
-//             img.alt = `Image of ${breedSelect.options[breedSelect.selectedIndex].text}`;
-//             carouselItem.appendChild(img);
-//             carousel.appendChild(carouselItem);
-//         });
-
-//         // Populate infoDump (using the first image object for breed info as an example)
-//         if (breedImages.length > 0) {
-//             const breedData = breedImages[0].breeds[0]; // Assuming breed info is nested in the image object
-//             const infoContainer = document.createElement('div');
-//             infoContainer.classList.add('breed-info');
-
-//             const breedName = document.createElement('h2');
-//             breedName.textContent = breedData.name;
-//             infoContainer.appendChild(breedName);
-
-//             const description = document.createElement('p');
-//             description.textContent = breedData.description;
-//             infoContainer.appendChild(description);
-
-//             const temperament = document.createElement('p');
-//             temperament.innerHTML = `<strong>Temperament:</strong> ${breedData.temperament}`;
-//             infoContainer.appendChild(temperament);
-
-//             const origin = document.createElement('p');
-//             origin.innerHTML = `<strong>Origin:</strong> ${breedData.origin}`;
-//             infoContainer.appendChild(origin);
-
-//             infoDump.appendChild(infoContainer);
-//         }
-
-//         // Restart carousel (assuming a function exists to handle this)
-//         // restartCarousel(); // Call your carousel initialization/restart function here
-
-//     } catch (error) {
-//         console.error('Error fetching breed data:', error);
-//         infoDump.innerHTML = '<p>Error loading breed information. Please try again.</p>';
-//     }
+//   // Append the entire informational section to the infoDump
+//   infoDump.appendChild(infoSection);
 // }
 
-// // Add event listener
-// document.addEventListener('DOMContentLoaded', () => {
-//     const breedSelect = document.getElementById('breedSelect');
-//         breedSelect.addEventListener('click', handleBreedSelection);
-// });
-
-// // Call this function at the end of your initialLoad function
-// // Example:
-// // function initialLoad() {
-// //     // ... other initial loading logic ...
-//      handleBreedSelection(); // To populate carousel on initial load with default selection
-// // }
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
