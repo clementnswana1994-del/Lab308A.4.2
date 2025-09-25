@@ -20,6 +20,21 @@ const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 const API_KEY =
   "live_8b33Tbbh1l2zGjrqbNr4NmbIMV3g44L6KciAWae711XZJ3j5a7uuw0QIhm58fmpW";
 
+axios.defaults.baseURL = "https://api.thecatapi.com/v1";
+axios.defaults.headers.common["x-api-key"] = API_KEY;
+axios.interceptors.request.use(function (config) {
+  console.log(config);
+    // Do something before request is sent
+    return config;
+  }
+);
+axios.interceptors.response.use(function (config) {
+  console.log(config);
+    // Do something before request is sent
+    return config;
+  }
+);
+axios.get('/breeds')
 /**
  * 1. Create an async function "initialLoad" that does the following:
  * - Retrieve a list of breeds from the cat API using fetch().
@@ -92,6 +107,8 @@ async function GetBreedID(event) {
   holdInfo.forEach(function (breed) {
     let item = createCarouselItem(breed.url, "cat", breed.id);
     let description = breed.breeds[0].description
+    // let adaptability = breed.breeds[0].adaptability
+    // let child_friendly = breed.breeds[0].child_friendly
     console.log(description);
     infoDump.innerHTML = `<p>Description: ${description}</p>`
     appendCarousel(item);
@@ -101,48 +118,6 @@ async function GetBreedID(event) {
 
 breedSelect.addEventListener("change", GetBreedID);
 
-
-
-//   // Create a main container for the informational section
-//   const infoSection = document.createElement('section');
-//   infoSection.classList.add('breeds.tempeture');
-
-//   // Create a dynamic heading
-//   const heading = document.createElement('h2');
-//   heading.textContent = 'breeds.tempeture';
-//   heading.style.color = '#0c62b7ff'; // Adding a touch of style
-//   infoSection.appendChild(breedSelect.tempeture);
-
-//   const description = document.createElement('p');
-//   description.innerHTML = 'This section demonstrates the power of <strong>JavaScript DOM manipulation</strong> to construct and populate elements on the fly. Observe how new elements are nested and styled programmatically.';
-//   infoSection.appendChild(description);
-
-//   // Create an unordered list to highlight key features
-//   const featureList = document.createElement('ul');
-//   featureList.style.listStyleType = 'square'; // Creative list style
-//   const features = [
-//     'Element creation with `document.createElement()`',
-//     'Attribute setting using `setAttribute()` or direct property access',
-//     'Text content assignment with `textContent` or `innerHTML`',
-//     'Hierarchical appending with `appendChild()`'
-//   ];
-//   features.forEach(featureText => {
-//     const listItem = document.createElement('li');
-//     listItem.textContent = featureText;
-//     featureList.appendChild(listItem);
-//   });
-//   infoSection.appendChild(featureList);
-
-//   // Create a small, styled footer for the section
-//   const sectionFooter = document.createElement('footer');
-//   const footerText = document.createElement('small');
-//   footerText.textContent = 'Generated dynamically on ' + new Date().toLocaleDateString();
-//   sectionFooter.appendChild(footerText);
-//   infoSection.appendChild(sectionFooter);
-
-//   // Append the entire informational section to the infoDump
-//   infoDump.appendChild(infoSection);
-// }
 
 
 /**
@@ -157,6 +132,61 @@ breedSelect.addEventListener("change", GetBreedID);
  *   by setting a default header with your API key so that you do not have to
  *   send it manually with all of your requests! You can also set a default base URL!
  */
+
+
+async function infodata() {
+  const response = await axios.get("/breeds");
+  const breedData = response.data;
+  //console.log(breedData);
+
+  breedData.forEach((breed) => {
+    const options = document.createElement("option");
+    //console.log(options);
+    breedSelect.appendChild(options);
+    options.value = breed.id;
+    options.textContent = breed.name;
+  });
+  GetBreedID()
+}
+initialLoad();
+
+breedSelect.addEventListener("change", GetBreedID);
+
+async function GetBreedID1() {
+  const breedId = breedSelect.value;
+  console.log(breedId);
+  const response = await axios.get("/images/search", {
+    params: {
+      breed_ids: breedId,
+      limit: 10,
+      has_breeds: 1,
+    },
+    //Note that we are not downloading a lot of data, so onDownloadProgress will likely only fire
+    onDownloadProgress: updateProgress,
+  });
+  let data = response.data;
+  console.log(response.status);
+  clear()
+
+  for (let i = 0; i < data.length; i++) {
+    console.log(data);
+    const img = document.createElement("img");
+    console.log(data[i].url);
+    const carouselItem = createCarouselItem(data[i].url, breedId, data[i].id);
+    let d = data[i].breeds[0].description;
+    let a = data[i].breeds[0].adaptability;
+    let c = data[i].breeds[0].child_friendly;
+
+    let description = breed.breeds[0].description
+    console.log(description);
+    infoDump.innerHTML = `<p>Description: ${d}</p>`    `<p>Adaptability: ${a}</p>`      `<p>Child Friendly: ${c}</p>` 
+    appendCarousel(item);
+  }
+  start()
+}
+
+
+
 /**
  * 5. Add axios interceptors to log the time between request and response to the console.
  * - Hint: you already have access to code that does this!
@@ -180,11 +210,37 @@ breedSelect.addEventListener("change", GetBreedID);
  *   with for future projects.
  */
 
+// function updateProgress(progressEvent) {
+//   // Calculate the percentage of completion
+//   const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+
+//   // Log or update the progress (e.g., update a progress bar)
+//   console.log(`Download Progress: ${percentage}%`);
+// }
+
+// // Example Axios request with onDownloadProgress
+// //const axios = require('axios');
+
+// axios.get('https://example.com/file', {
+//   responseType: 'blob', // For downloading files
+//   onDownloadProgress: updateProgress, // Pass the function here
+// })
+//   .then(response => {
+//     console.log('Download complete!');
+//     // Handle the downloaded file (e.g., save it or process it)
+//   })
+//   .catch(error => {
+//     console.error('Error during download:', error);
+//   });
+
 /**
  * 7. As a final element of progress indication, add the following to your axios interceptors:
  * - In your request interceptor, set the body element's cursor style to "progress."
  * - In your response interceptor, remove the progress cursor style from the body element.
  */
+
+ 
+
 /**
  * 8. To practice posting data, we'll create a system to "favourite" certain images.
  * - The skeleton of this function has already been created for you.
