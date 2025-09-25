@@ -55,6 +55,7 @@ async function initialLoad() {
   } catch (error) {
     console.error("An error occurred:", error);
   }
+  GetBreedID()
 }
 
 // Call the async function to start the process
@@ -90,6 +91,9 @@ async function GetBreedID(event) {
   console.log(holdInfo);
   holdInfo.forEach(function (breed) {
     let item = createCarouselItem(breed.url, "cat", breed.id);
+    let description = breed.breeds[0].description
+    console.log(description);
+    infoDump.innerHTML = `<p>Description: ${description}</p>`
     appendCarousel(item);
     console.log(item);
   });
@@ -98,26 +102,6 @@ async function GetBreedID(event) {
 breedSelect.addEventListener("change", GetBreedID);
 
 
-// Use the other data you have been given to create an informational section within the infoDump element.
-//   - Be creative with how you create DOM elements and HTML.
-             
-async function BreedInfo() {
-  const breedInfo = await fetch()
-  if (isLoading) {
-    return BreedInfo;
-  }
-  
-
-  if (!info) 
-    return 
-        let item = createinfoDump(breeds.url, 0, infoDump);
-  
- 
-  const temperamentTags = info.temperament ? info.temperament.split(', ') : [];
-
-
-} 
- 
 
 //   // Create a main container for the informational section
 //   const infoSection = document.createElement('section');
