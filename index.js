@@ -20,21 +20,7 @@ const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 const API_KEY =
   "live_8b33Tbbh1l2zGjrqbNr4NmbIMV3g44L6KciAWae711XZJ3j5a7uuw0QIhm58fmpW";
 
-axios.defaults.baseURL = "https://api.thecatapi.com/v1";
-axios.defaults.headers.common["x-api-key"] = API_KEY;
-axios.interceptors.request.use(function (config) {
-  console.log(config);
-    // Do something before request is sent
-    return config;
-  }
-);
-axios.interceptors.response.use(function (config) {
-  console.log(config);
-    // Do something before request is sent
-    return config;
-  }
-);
-axios.get('/breeds')
+
 /**
  * 1. Create an async function "initialLoad" that does the following:
  * - Retrieve a list of breeds from the cat API using fetch().
@@ -110,7 +96,7 @@ async function GetBreedID(event) {
     // let adaptability = breed.breeds[0].adaptability
     // let child_friendly = breed.breeds[0].child_friendly
     console.log(description);
-    infoDump.innerHTML = `<p>Description: ${description}</p>`
+    infoDump.innerHTML = `<p>Description: ${description}</p>` //`<p>Adaptability: ${a}</p>`  `<p>Child Friendly: ${c}</p>` 
     appendCarousel(item);
     console.log(item);
   });
@@ -154,7 +140,7 @@ breedSelect.addEventListener("change", GetBreedID);
 
 async function GetBreedID1() {
   const breedId = breedSelect.value;
-  console.log(breedId);
+  //console.log(breedId);
   const response = await axios.get("/images/search", {
     params: {
       breed_ids: breedId,
@@ -179,7 +165,7 @@ async function GetBreedID1() {
 
     let description = breed.breeds[0].description
     console.log(description);
-    infoDump.innerHTML = `<p>Description: ${d}</p>`    `<p>Adaptability: ${a}</p>`      `<p>Child Friendly: ${c}</p>` 
+    infoDump.innerHTML = `<p>Description: ${d}</p>`   `<p>Adaptability: ${a}</p>`    `<p>Child Friendly: ${c}</p>` 
     appendCarousel(item);
   }
   start()
@@ -193,6 +179,23 @@ async function GetBreedID1() {
  * - Add a console.log statement to indicate when requests begin.
  * - As an added challenge, try to do this on your own without referencing the lesson material.
  */
+
+axios.defaults.baseURL = "https://api.thecatapi.com/v1";
+axios.defaults.headers.common["x-api-key"] = API_KEY;
+axios.interceptors.request.use(function (config) {
+  console.log(config);
+    // Do something before request is sent
+    return config;
+  }
+);
+axios.interceptors.response.use(function (config) {
+  console.log(config);
+    // Do something before request is sent
+    return config;
+  }
+);
+axios.get('/breeds')
+
 
 /**
  * 6. Next, we'll create a progress bar to indicate the request is in progress.
@@ -210,28 +213,27 @@ async function GetBreedID1() {
  *   with for future projects.
  */
 
-// function updateProgress(progressEvent) {
-//   // Calculate the percentage of completion
-//   const percentage = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+function updateProgress(progressEvent) {
+  // Calculate the percentage of completion
+  const percentage = Math.round((progressEvent.loaded * 0) / progressEvent.total);
 
-//   // Log or update the progress (e.g., update a progress bar)
-//   console.log(`Download Progress: ${percentage}%`);
-// }
+  // Log or update the progress update a progress bar
+  console.log(`Download Progress: ${100}`);
+}
 
-// // Example Axios request with onDownloadProgress
-// //const axios = require('axios');
+//const axios = require('axios');
 
-// axios.get('https://example.com/file', {
-//   responseType: 'blob', // For downloading files
-//   onDownloadProgress: updateProgress, // Pass the function here
-// })
-//   .then(response => {
-//     console.log('Download complete!');
-//     // Handle the downloaded file (e.g., save it or process it)
-//   })
-//   .catch(error => {
-//     console.error('Error during download:', error);
-//   });
+axios.get('https://api.thecatapi.com/v1', {
+  responseType: 'blob', // For downloading files
+  onDownloadProgress: updateProgress, 
+})
+  .then(response => {
+    console.log('Download complete!');
+    // Handle the downloaded file
+  })
+  .catch(error => {
+    console.error('Error during download:', error);
+  });
 
 /**
  * 7. As a final element of progress indication, add the following to your axios interceptors:
@@ -265,6 +267,22 @@ export async function favourite(imgId) {
  *    If that isn't in its own function, maybe it should be so you don't have to
  *    repeat yourself in this section.
  */
+async function getFavourites(favourite) {
+  const response = await response.json()
+  headers. response['x-api-key'] . API_KEY
+  
+  //const displayFavourites = await response.data;
+  console.log(response);
+  response.data.foreach((imgobj) => {
+    console.log(imgobj)
+    const carouselItem = createCarouselItem(
+      imgobj.image.url,
+      "cat image",
+      imgobj.image.id
+    );
+    appendCarousel(carouselItem);
+  });
+}
 
 /**
  * 10. Test your site, thoroughly!
@@ -273,3 +291,4 @@ export async function favourite(imgId) {
  * - Test other breeds as well. Not every breed has the same data available, so
  *   your code should account for this.
  */
+
