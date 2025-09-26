@@ -254,9 +254,19 @@ axios.get('https://api.thecatapi.com/v1', {
  *   you delete that favourite using the API, giving this function "toggle" functionality.
  * - You can call this function by clicking on the heart at the top right of any image.
  */
+
 export async function favourite(imgId) {
-  // your code here
+  try {
+    const response = await axios.post('https://api.thecatapi.com/v1', {
+      imageId: imgId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding image to favourites:', error.message);
+    throw error; 
+  }
 }
+
 
 /**
  * 9. Test your favourite() function by creating a getFavourites() function.
